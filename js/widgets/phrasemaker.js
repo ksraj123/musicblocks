@@ -279,33 +279,25 @@ class PhraseMaker {
             "erase-button.svg",
             PhraseMaker.ICONSIZE,
             _("Clear")
-        ).onclick = () => {
-            this._clear();
-        };
+        ).onclick = (this._clear).bind(this);
 
         if (!localStorage.beginnerMode) {
             this.widgetWindow.addButton(
                 "export-button.svg",
                 PhraseMaker.ICONSIZE,
                 _("Export")
-            ).onclick = () => {
-                this._export();
-            };
+            ).onclick = (this._export).bind(this);
         }
 
         this.widgetWindow.addButton(
             "sort.svg",
             PhraseMaker.ICONSIZE,
             _("Sort")
-        ).onclick = () => {
-            this._sort();
-        };
+        ).onclick = (this._sort).bind(this);
 
         let cell = this.widgetWindow.addButton("add2.svg", PhraseMaker.ICONSIZE, _("Add note"));
         cell.setAttribute("id", "addnotes");
-        cell.onclick = () => {
-            this._createAddRowPieSubmenu();
-        };
+        cell.onclick = (this._createAddRowPieSubmenu).bind(this);
 
         const ptmTable = document.createElement("table");
         ptmTable.setAttribute("cellpadding", "0px");
