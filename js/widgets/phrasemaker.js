@@ -187,7 +187,7 @@ class PhraseMaker {
 
     removeNode(rowBlock, rhythmBlock, n) {
         // When the matrix is changed, we may need to remove nodes.
-        let blk = this.blockNo;
+        const blk = this.blockNo;
         let obj;
         for (let i = 0; i < this._blockMap[blk].length; i++) {
             obj = this._blockMap[blk][i];
@@ -218,9 +218,9 @@ class PhraseMaker {
 
         this.playingNow = false;
 
-        let w = window.innerWidth;
+        const w = window.innerWidth;
         this._cellScale = Math.max(1, w / 1200);
-        let iconSize = PhraseMaker.ICONSIZE * this._cellScale;
+        const iconSize = PhraseMaker.ICONSIZE * this._cellScale;
 
         this.widgetWindow = window.widgetWindows.windowFor(this, "phrase maker");
         this.widgetWindow.clear();
@@ -308,7 +308,7 @@ class PhraseMaker {
             this._createAddRowPieSubmenu();
         };
 
-        let ptmTable = document.createElement("table");
+        const ptmTable = document.createElement("table");
         ptmTable.setAttribute("cellpadding", "0px");
         this.widgetWindow.getWidgetBody().append(ptmTable);
 
@@ -499,8 +499,8 @@ class PhraseMaker {
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
-                    let index = eCell.getAttribute("alt").split("__")[0];
-                    let condition = eCell.getAttribute("alt").split("__")[1];
+                    const index = eCell.getAttribute("alt").split("__")[0];
+                    const condition = eCell.getAttribute("alt").split("__")[1];
                     this._createColumnPieSubmenu(index, condition);
                 };
 
@@ -519,8 +519,8 @@ class PhraseMaker {
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
-                    let index = eCell.getAttribute("alt").split("__")[0];
-                    let condition = eCell.getAttribute("alt").split("__")[1];
+                    const index = eCell.getAttribute("alt").split("__")[0];
+                    const condition = eCell.getAttribute("alt").split("__")[1];
                     this._createMatrixGraphicsPieSubmenu(
                         index,
                         condition,
@@ -542,8 +542,8 @@ class PhraseMaker {
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
-                    let index = eCell.getAttribute("alt").split("__")[0];
-                    let condition = eCell.getAttribute("alt").split("__")[1];
+                    const index = eCell.getAttribute("alt").split("__")[0];
+                    const condition = eCell.getAttribute("alt").split("__")[1];
                     this._createMatrixGraphicsPieSubmenu(
                         index,
                         condition,
@@ -572,8 +572,8 @@ class PhraseMaker {
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
-                    let index = eCell.getAttribute("alt").split("__")[0];
-                    let condition = eCell.getAttribute("alt").split("__")[1];
+                    const index = eCell.getAttribute("alt").split("__")[0];
+                    const condition = eCell.getAttribute("alt").split("__")[1];
                     this._createMatrixGraphics2PieSubmenu(index, null);
                 };
 
@@ -614,8 +614,8 @@ class PhraseMaker {
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
-                    let index = eCell.getAttribute("alt").split("__")[0];
-                    let condition = eCell.getAttribute("alt").split("__")[1];
+                    const index = eCell.getAttribute("alt").split("__")[0];
+                    const condition = eCell.getAttribute("alt").split("__")[1];
                     this._createColumnPieSubmenu(index, condition);
                 };
 
@@ -702,14 +702,14 @@ class PhraseMaker {
             "imgsrc: images/mouse.svg",
             "imgsrc: images/pen.svg"
         ];
-        let valueLabel = [];
+        const valueLabel = [];
         let label;
         for (let i = 0; i < VALUES.length; i++) {
             label = _(VALUES[i]);
             valueLabel.push(label);
         }
 
-        let graphicLabels = [];
+        const graphicLabels = [];
         for (let i = 0; i < PhraseMaker.MATRIXGRAPHICS.length; i++) {
             graphicLabels.push(PhraseMaker.MATRIXGRAPHICS[i]);
         }
@@ -758,8 +758,8 @@ class PhraseMaker {
         this._exitWheel.clickModeRotate = false;
         this._exitWheel.createWheel(["×", " "]);
 
-        let x = docById("addnotes").getBoundingClientRect().x;
-        let y = docById("addnotes").getBoundingClientRect().y;
+        const x = docById("addnotes").getBoundingClientRect().x;
+        const y = docById("addnotes").getBoundingClientRect().y;
 
         docById("wheelDivptm").style.position = "absolute";
         docById("wheelDivptm").style.height = "300px";
@@ -781,7 +781,7 @@ class PhraseMaker {
             this._exitWheel.removeWheel();
         };
 
-        let __subMenuChanged = () => {
+        const __subMenuChanged = () => {
             __selectionChanged();
         };
 
@@ -790,8 +790,8 @@ class PhraseMaker {
             console.debug(label);
             let rLabel = null;
             let rArg = null;
-            let blockLabel = "";
-            let newBlock = this._logo.blocks.blockList.length;
+            const blockLabel = "";
+            const newBlock = this._logo.blocks.blockList.length;
             switch (label) {
                 case "pitch":
                     console.debug("loading new pitch block");
@@ -947,7 +947,7 @@ class PhraseMaker {
 
             this.makeClickable();
             if (label === "pitch") {
-                setTimeout(function() {
+                setTimeout(() => {
                     this.pitchBlockAdded(newBlock);
                 }, 200);
             }
@@ -958,7 +958,7 @@ class PhraseMaker {
         }
     }
 
-    pitchBlockAdded = function(blockN) {
+    pitchBlockAdded(blockN) {
         let i;
         for (i = 0; i < this.columnBlocksMap.length; i++) {
             if (this.columnBlocksMap[i][0] === blockN) {
@@ -969,10 +969,10 @@ class PhraseMaker {
         setTimeout(this._createColumnPieSubmenu(i, "pitchblocks", true), 500);
     }
 
-    _createMatrixGraphics2PieSubmenu = function(blockIndex, blk) {
+    _createMatrixGraphics2PieSubmenu(blockIndex, blk) {
         // A wheel for modifying 2-arg graphics blocks
         docById("wheelDivptm").style.display = "";
-        let arcRadiusLabel = [
+        const arcRadiusLabel = [
             "10",
             "20",
             "30",
@@ -984,8 +984,8 @@ class PhraseMaker {
             "90",
             "100"
         ];
-        let arcAngleLabel = ["0", "30", "45", "60", "90", "180"];
-        let setxyValueLabel = ["-200", "-100", "0", "100", "200"];
+        const arcAngleLabel = ["0", "30", "45", "60", "90", "180"];
+        const setxyValueLabel = ["-200", "-100", "0", "100", "200"];
 
         this._pitchWheel = new wheelnav("wheelDivptm", null, 600, 600);
         this._exitWheel = new wheelnav("_exitWheel", this._pitchWheel.raphael);
@@ -997,8 +997,8 @@ class PhraseMaker {
             "_blockLabelsWheel2",
             this._pitchWheel.raphael
         );
-        let _blockNames = PhraseMaker.MATRIXGRAPHICS2.slice();
-        let _blockLabels = [];
+        const _blockNames = PhraseMaker.MATRIXGRAPHICS2.slice();
+        const _blockLabels = [];
         for (let i = 0; i < _blockNames.length; i++) {
             _blockLabels.push(
                 this._logo.blocks.protoBlockDict[_blockNames[i]][
@@ -1053,8 +1053,8 @@ class PhraseMaker {
         this._blockLabelsWheel.animatetime = 0;
         this._blockLabelsWheel.createWheel(_blockLabels);
 
-        let x = this._labelcols[blockIndex].getBoundingClientRect().x;
-        let y = this._labelcols[blockIndex].getBoundingClientRect().y;
+        const x = this._labelcols[blockIndex].getBoundingClientRect().x;
+        const y = this._labelcols[blockIndex].getBoundingClientRect().y;
 
         docById("wheelDivptm").style.position = "absolute";
         docById("wheelDivptm").style.height = "300px";
@@ -1075,11 +1075,11 @@ class PhraseMaker {
             thisBlock = blk;
         }
 
-        let blockLabel = this._logo.blocks.blockList[thisBlock].name;
-        let xblockLabelValue = this._logo.blocks.blockList[
+        const blockLabel = this._logo.blocks.blockList[thisBlock].name;
+        const xblockLabelValue = this._logo.blocks.blockList[
             this._logo.blocks.blockList[thisBlock].connections[1]
         ].value;
-        let yblockLabelValue = this._logo.blocks.blockList[
+        const yblockLabelValue = this._logo.blocks.blockList[
             this._logo.blocks.blockList[thisBlock].connections[2]
         ].value;
 
@@ -1106,7 +1106,7 @@ class PhraseMaker {
             this._blockLabelsWheel2.removeWheel();
         };
 
-        let __enterArgValue1 = () => {
+        const __enterArgValue1 = () => {
             this.xblockValue[0] =
                 this._blockLabelsWheel2.navItems[
                     this._blockLabelsWheel2.selectedNavItemIndex
@@ -1114,7 +1114,7 @@ class PhraseMaker {
             __selectionChanged(true);
         };
 
-        let __enterArgValue2 = () => {
+        const __enterArgValue2 = () => {
             this.yblockValue[0] =
                 this._pitchWheel.navItems[
                     this._pitchWheel.selectedNavItemIndex
@@ -1146,12 +1146,12 @@ class PhraseMaker {
         }
 
         let __selectionChanged = async (updatingArgs) => {
-            let thisBlockName =
+            const thisBlockName =
                 _blockNames[this._blockLabelsWheel.selectedNavItemIndex];
             let argBlock, z;
             if (updatingArgs === undefined) {
                 // Creating a new block and removing the old one.
-                let newBlock = this._logo.blocks.blockList.length;
+                const newBlock = this._logo.blocks.blockList.length;
                 this._logo.blocks.loadNewBlocks([
                     [0, thisBlockName, 0, 0, [null, 1, 2, null]],
                     [
@@ -1328,7 +1328,7 @@ class PhraseMaker {
 
         let blockNamesGraphics, blockLabelsGraphics, blockNamesPen,
             blockLabelsPen, name;
-            blockLabelsPen;
+        blockLabelsPen;
         if (condition === "graphicsblocks") {
             this._blockLabelsWheel = new wheelnav(
                 "_blockLabelsWheel",
@@ -1391,8 +1391,8 @@ class PhraseMaker {
             this._blockLabelsWheel.animatetime = 0;
         }
 
-        let x = this._labelcols[blockIndex].getBoundingClientRect().x;
-        let y = this._labelcols[blockIndex].getBoundingClientRect().y;
+        const x = this._labelcols[blockIndex].getBoundingClientRect().x;
+        const y = this._labelcols[blockIndex].getBoundingClientRect().y;
 
         docById("wheelDivptm").style.position = "absolute";
         docById("wheelDivptm").style.height = "300px";
@@ -1414,7 +1414,7 @@ class PhraseMaker {
         }
 
         let blockLabel = this._logo.blocks.blockList[thisBlock].name;
-        let blockLabelValue = this._logo.blocks.blockList[
+        const blockLabelValue = this._logo.blocks.blockList[
             this._logo.blocks.blockList[thisBlock].connections[1]
         ].value;
 
@@ -1451,7 +1451,7 @@ class PhraseMaker {
             }
         };
 
-        let __enterArgValue = function() {
+        const __enterArgValue = () => {
             this.blockValue =
                 this._pitchWheel.navItems[
                     this._pitchWheel.selectedNavItemIndex
@@ -1566,7 +1566,7 @@ class PhraseMaker {
 
             // Update the cell label.
             let cell = this._headcols[blockIndex];
-            let iconSize = PhraseMaker.ICONSIZE * (window.innerWidth / 1200);
+            const iconSize = PhraseMaker.ICONSIZE * (window.innerWidth / 1200);
             if (PhraseMaker.MATRIXSYNTHS.indexOf(this.rowLabels[blockIndex]) !== -1) {
                 cell.innerHTML =
                     '&nbsp;&nbsp;<img src="' +
@@ -1657,9 +1657,9 @@ class PhraseMaker {
         index = parseInt(index);
         docById("wheelDivptm").style.display = "";
 
-        let accidentals = ["𝄪", "♯", "♮", "♭", "𝄫"];
+        const accidentals = ["𝄪", "♯", "♮", "♭", "𝄫"];
         let noteLabels = ["ti", "la", "sol", "fa", "mi", "re", "do"];
-        let drumLabels = [];
+        const drumLabels = [];
         let label;
         for (let i = 0; i < DRUMS.length; i++) {
             label = _(DRUMS[i]);
@@ -1667,7 +1667,7 @@ class PhraseMaker {
         }
 
         let categories;
-        let colors = [];
+        const colors = [];
         if (condition === "drumblocks") {
             noteLabels = drumLabels;
             categories = [
@@ -1748,7 +1748,7 @@ class PhraseMaker {
         this._exitWheel.clickModeRotate = false;
         this._exitWheel.createWheel(["×", " "]);
 
-        let accidentalLabels = [];
+        const accidentalLabels = [];
         let octaveLabels = [];
         let block, noteValue, octaveValue, accidentalsValue;
 
@@ -1810,8 +1810,8 @@ class PhraseMaker {
             this._octavesWheel.createWheel(octaveLabels);
         }
 
-        let x = this._labelcols[index].getBoundingClientRect().x;
-        let y = this._labelcols[index].getBoundingClientRect().y;
+        const x = this._labelcols[index].getBoundingClientRect().x;
+        const y = this._labelcols[index].getBoundingClientRect().y;
 
         docById("wheelDivptm").style.position = "absolute";
         docById("wheelDivptm").style.height = "300px";
@@ -1873,11 +1873,11 @@ class PhraseMaker {
             }
         };
 
-        let __selectionChanged = () => {
+        const __selectionChanged = () => {
             let label =
                 this._pitchWheel.navItems[this._pitchWheel.selectedNavItemIndex]
                     .title;
-            let i = noteLabels.indexOf(label);
+            const i = noteLabels.indexOf(label);
             let attr, flag, z;
             let noteLabelBlock;
             let octave, noteObj;
@@ -1948,7 +1948,7 @@ class PhraseMaker {
             }
 
             let cell = this._headcols[index];
-            let drumName = getDrumName(this.rowLabels[index]);
+            const drumName = getDrumName(this.rowLabels[index]);
             const BELLSETIDX = {
                 C: 1,
                 D: 2,
@@ -1965,9 +1965,9 @@ class PhraseMaker {
                 la: 6,
                 ti: 7
             };
-            let noteName = this.rowLabels[index];
-            let w = window.innerWidth;
-            let iconSize = PhraseMaker.ICONSIZE * (w / 1200);
+            const noteName = this.rowLabels[index];
+            const w = window.innerWidth;
+            const iconSize = PhraseMaker.ICONSIZE * (w / 1200);
             if (drumName != null) {
                 cell.innerHTML =
                     '&nbsp;&nbsp;<img src="' +
@@ -2037,7 +2037,7 @@ class PhraseMaker {
             this._noteStored[index] = noteStored;
         };
 
-        let __pitchPreview = () => {
+        const __pitchPreview = () => {
             let label =
                 this._pitchWheel.navItems[this._pitchWheel.selectedNavItemIndex]
                     .title;
@@ -2066,7 +2066,7 @@ class PhraseMaker {
                     this._logo.errorMsg,
                     this._logo.synth.inTemperament
                 );
-                obj[0] = obj[0].replace(SHARP, '#').replace(FLAT, 'b');
+                obj[0] = obj[0].replace(SHARP, "#").replace(FLAT, "b");
                 this._logo.synth.setMasterVolume(PREVIEWVOLUME);
                 Singer.setSynthVolume(this._logo, 0, DEFAULTVOICE, PREVIEWVOLUME);
                 this._logo.synth.trigger(
@@ -2132,8 +2132,8 @@ class PhraseMaker {
 
     _blockReplace(oldblk, newblk) {
         // Find the connections from the old block
-        let c0 = this._logo.blocks.blockList[oldblk].connections[0];
-        let c1 = last(this._logo.blocks.blockList[oldblk].connections);
+        const c0 = this._logo.blocks.blockList[oldblk].connections[0];
+        const c1 = last(this._logo.blocks.blockList[oldblk].connections);
 
         // Connect the new block
         this._logo.blocks.blockList[newblk].connections[0] = c0;
@@ -2219,8 +2219,8 @@ class PhraseMaker {
     }
 
     _removePitchBlock(blockNo) {
-        let c0 = this._logo.blocks.blockList[blockNo].connections[0];
-        let c1 = last(this._logo.blocks.blockList[blockNo].connections);
+        const c0 = this._logo.blocks.blockList[blockNo].connections[0];
+        const c1 = last(this._logo.blocks.blockList[blockNo].connections);
         this._logo.blocks.blockList[c0].connections[
             this._logo.blocks.blockList[c0].connections.length - 1
         ] = c1;
@@ -2238,7 +2238,7 @@ class PhraseMaker {
     }
 
     _generateDataURI(file) {
-        let data = "data: text/html;charset=utf-8, " + encodeURIComponent(file);
+        const data = "data: text/html;charset=utf-8, " + encodeURIComponent(file);
         return data;
     }
 
@@ -2264,7 +2264,7 @@ class PhraseMaker {
             this._markedColsInRow.push(thisRow);
         }
 
-        let sortableList = [];
+        const sortableList = [];
         let drumName, drumIndex;
         // Make a list to sort, skipping drums and graphics.
         // frequency;label;arg;row index
@@ -2344,7 +2344,7 @@ class PhraseMaker {
             }
         }
 
-        let sortedList = sortableList.sort(function(a, b) {
+        let sortedList = sortableList.sort((a, b) => {
             return a[0] - b[0];
         });
 
@@ -2360,8 +2360,8 @@ class PhraseMaker {
         for (let i = 0; i < sortedList.length; i++) {
             this._rowMapper.push(sortedList[i][3]);
         }
-        let newColumnBlockMap = [];
-        let oldColumnBlockMap = this.columnBlocksMap;
+        const newColumnBlockMap = [];
+        const oldColumnBlockMap = this.columnBlocksMap;
         for (let i = 0; i < this._rowMapper.length; i++) {
             newColumnBlockMap.push(this.columnBlocksMap[this._rowMapper[i]]);
         }
@@ -2388,9 +2388,7 @@ class PhraseMaker {
                         ),
                         500
                     );
-                    this.columnBlocksMap = this.columnBlocksMap.filter(function(
-                        ele
-                    ) {
+                    this.columnBlocksMap = this.columnBlocksMap.filter((ele) => {
                         return (
                             ele[0] !== oldColumnBlockMap[sortedList[lastObj][3]][0]
                         );
@@ -2451,32 +2449,32 @@ class PhraseMaker {
     }
 
     _export() {
-        let exportWindow = window.open("");
+        const exportWindow = window.open("");
         console.debug(exportWindow);
-        let exportDocument = exportWindow.document;
+        const exportDocument = exportWindow.document;
         if (exportDocument === undefined) {
             console.debug("Could not create export window");
             return;
         }
 
-        let title = exportDocument.createElement("title");
+        const title = exportDocument.createElement("title");
         title.innerHTML = "Music Matrix";
         exportDocument.head.appendChild(title);
 
-        let w = exportDocument.createElement("H3");
+        const w = exportDocument.createElement("H3");
         w.innerHTML = "Music Matrix";
 
         exportDocument.body.appendChild(w);
 
-        let x = exportDocument.createElement("TABLE");
+        const x = exportDocument.createElement("TABLE");
         x.setAttribute("id", "exportTable");
         x.style.textAlign = "center";
 
         exportDocument.body.appendChild(x);
 
-        let exportTable = exportDocument.getElementById("exportTable");
+        const exportTable = exportDocument.getElementById("exportTable");
 
-        let header = exportTable.createTHead();
+        const header = exportTable.createTHead();
 
         let exportLabel, exportRow, drumName, blockLabel, exportCell;
         let noteValueRow, col;
@@ -2611,8 +2609,8 @@ class PhraseMaker {
             exportCell.style.padding = 1 + "px";
         }
 
-        let saveDocument = exportDocument;
-        let uriData = saveDocument.documentElement.outerHTML;
+        const saveDocument = exportDocument;
+        const uriData = saveDocument.documentElement.outerHTML;
         exportDocument.body.innerHTML +=
             '<br><a id="downloadb1" style="background: #C374E9;' +
             "border-radius: 5%;" +
@@ -2647,10 +2645,10 @@ class PhraseMaker {
         // e.g., 1/4; the rest of the parameters are the list of notes
         // to be added to the tuplet, e.g., 1/8, 1/8, 1/8.
 
-        let tupletTimeFactor = param[0][0] / param[0][1];
-        let numberOfNotes = param[1].length;
+        const tupletTimeFactor = param[0][0] / param[0][1];
+        const numberOfNotes = param[1].length;
         let totalNoteInterval = 0;
-        let ptmTable = docById("ptmTable");
+        const ptmTable = docById("ptmTable");
         let lcd;
         for (let i = 0; i < numberOfNotes; i++) {
             if (i === 0) {
@@ -2669,7 +2667,7 @@ class PhraseMaker {
             }
         }
 
-        let noteValue = param[0][1] / param[0][0];
+        const noteValue = param[0][1] / param[0][0];
         // The tuplet is note value is calculated as #notes x note value
         let noteValueToDisplay = calcNoteValueToDisplay(
             param[0][1],
@@ -2744,7 +2742,7 @@ class PhraseMaker {
         }
 
         // Now add the tuplet to the matrix.
-        let tupletNoteValue = noteValue * tupletValue;
+        const tupletNoteValue = noteValue * tupletValue;
         let numerator, thisNoteValue, obj;
         let cellWidth, cellColor;
         let ptmRow, drumName;
@@ -2772,8 +2770,8 @@ class PhraseMaker {
             );
 
             if (obj[1] < 13) {
-            if (NOTESYMBOLS != undefined && obj[1] in NOTESYMBOLS) {
-                cell.innerHTML =
+                if (NOTESYMBOLS != undefined && obj[1] in NOTESYMBOLS) {
+                    cell.innerHTML =
                     obj[0] +
                     "<br>&mdash;<br>" +
                     obj[1] +
@@ -2783,10 +2781,10 @@ class PhraseMaker {
                     '" height=' +
                     (MATRIXSOLFEHEIGHT / 2) * this._cellScale +
                     ">";
-            } else {
-                cell.innerHTML =
+                } else {
+                    cell.innerHTML =
                     obj[0] + "<br>&mdash;<br>" + obj[1] + "<br><br>";
-            }
+                }
             } else {
                 cell.innerHTML = "";
             }
@@ -2821,16 +2819,18 @@ class PhraseMaker {
                 cell.style.maxWidth = cell.style.width;
                 cell.style.backgroundColor = cellColor;
 
-                cell.onmouseover = function() {
-                    if (this.style.backgroundColor !== "black") {
-                        this.style.backgroundColor =
+                cell.onmouseover = (evt) => {
+                    const cell = evt.target;
+                    if (cell.style.backgroundColor !== "black") {
+                        cell.style.backgroundColor =
                             platformColor.selectorSelected;
                     }
                 };
 
-                cell.onmouseout = function() {
-                    if (this.style.backgroundColor !== "black") {
-                        this.style.backgroundColor = this.getAttribute(
+                cell.onmouseout = (evt) => {
+                    const cell = evt.target;
+                    if (cell.style.backgroundColor !== "black") {
+                        cell.style.backgroundColor = cell.getAttribute(
                             "cellColor"
                         );
                     }
@@ -2893,7 +2893,7 @@ class PhraseMaker {
             this._outputAsTuplet.push([numBeats, noteValue]);
         }
 
-        let rowCount = this.rowLabels.length - this._rests;
+        const rowCount = this.rowLabels.length - this._rests;
         let drumName, row, cell, cellColor;
         for (let j = 0; j < numBeats; j++) {
             for (let i = 0; i < rowCount; i++) {
@@ -2928,7 +2928,7 @@ class PhraseMaker {
                 cell.setAttribute("alt", 1 / noteValue);
 
                 cell.onmouseover = (evt) => {
-                    let cell = evt.target;
+                    const cell = evt.target;
                     if (cell.style.backgroundColor !== "black") {
                         cell.style.backgroundColor =
                             platformColor.selectorSelected;
@@ -2936,7 +2936,7 @@ class PhraseMaker {
                 };
 
                 cell.onmouseout = (evt) => {
-                    let cell = evt.target;
+                    const cell = evt.target;
                     if (cell.style.backgroundColor !== "black") {
                         cell.style.backgroundColor = cell.getAttribute(
                             "cellColor"
@@ -2994,7 +2994,7 @@ class PhraseMaker {
 
     _lookForNoteBlocksOrRepeat() {
         this._noteBlocks = false;
-        let bno = this.blockNo;
+        const bno = this.blockNo;
         let blk;
         for (let i = 0; i < this._blockMap[bno].length; i++) {
             blk = this._blockMap[bno][i][1][0];
@@ -3023,8 +3023,8 @@ class PhraseMaker {
     }
 
     _syncMarkedBlocks() {
-        let newBlockMap = [];
-        let blk = this.blockNo;
+        const newBlockMap = [];
+        const blk = this.blockNo;
         for (let i = 0; i < this._blockMap[blk].length; i++) {
             if (this._blockMap[blk][i][0] === -1) {
                 continue;
@@ -3061,7 +3061,7 @@ class PhraseMaker {
     };
 
     blockConnection(len, bottomOfClamp) {
-        let n = this._logo.blocks.blockList.length - len;
+        const n = this._logo.blocks.blockList.length - len;
         let c;
         if (bottomOfClamp == null) {
             this._logo.blocks.blockList[this.blockNo].connections[2] = n;
@@ -3099,9 +3099,9 @@ class PhraseMaker {
     _addRhythmBlock(value, times) {
         let RHYTHMOBJ = [];
         value = toFraction(value);
-        let topOfClamp = this._logo.blocks.blockList[this.blockNo]
+        const topOfClamp = this._logo.blocks.blockList[this.blockNo]
             .connections[1];
-        let bottomOfClamp = this._logo.blocks.findBottomBlock(topOfClamp);
+        const bottomOfClamp = this._logo.blocks.findBottomBlock(topOfClamp);
         if (this._logo.blocks.blockList[bottomOfClamp].name === "vspace") {
             RHYTHMOBJ = [
                 [0, ["rhythm2", {}], 0, 0, [null, 1, 2, 5]],
@@ -3132,7 +3132,7 @@ class PhraseMaker {
     }
 
     _update(i, value, k, noteCase) {
-        let updates = [];
+        const updates = [];
         value = toFraction(value);
         if (noteCase === "tupletnote") {
             updates.push(
@@ -3188,7 +3188,7 @@ class PhraseMaker {
     }
 
     _mapNotesBlocks(blockName, withName) {
-        let notesBlockMap = [];
+        const notesBlockMap = [];
         let blk = this._logo.blocks.blockList[this.blockNo].connections[1];
         let myBlock = this._logo.blocks.blockList[blk];
 
@@ -3236,7 +3236,7 @@ class PhraseMaker {
     }
 
     recalculateBlocks() {
-        let adjustedNotes = [];
+        const adjustedNotes = [];
         adjustedNotes.push([this._logo.tupletRhythms[0][2], 1]);
         let startidx = 1;
         for (let i = 1; i < this._logo.tupletRhythms.length; i++) {
@@ -3256,10 +3256,10 @@ class PhraseMaker {
 
     _readjustNotesBlocks() {
         let notesBlockMap = this._mapNotesBlocks("rhythm2");
-        let adjustedNotes = this.recalculateBlocks();
+        const adjustedNotes = this.recalculateBlocks();
 
-        let colBlocks = [];
-        let n = adjustedNotes.length - notesBlockMap.length;
+        const colBlocks = [];
+        const n = adjustedNotes.length - notesBlockMap.length;
         if (n >= 0) {
             for (let i = 0; i < notesBlockMap.length; i++) {
                 this._update(
@@ -3604,8 +3604,8 @@ class PhraseMaker {
                 }
             }
         }
-        let notesBlockMap = this._mapNotesBlocks("stuplet");
-        let colBlocks = [];
+        const notesBlockMap = this._mapNotesBlocks("stuplet");
+        const colBlocks = [];
         for (let i = 0; i < this._logo.tupletRhythms.length; i++) {
             for (let j = 0; j < this._logo.tupletRhythms[i].length - 2; j++) {
                 colBlocks.push([notesBlockMap[i], j]);
@@ -3769,7 +3769,7 @@ class PhraseMaker {
 
         let x = 0, y = 0;
         if (noteToDivide !== null) {
-            let ntd = this._noteValueRow.cells[noteToDivide];
+            const ntd = this._noteValueRow.cells[noteToDivide];
             x = ntd.getBoundingClientRect().x;
             y = ntd.getBoundingClientRect().y;
         }
@@ -3792,9 +3792,9 @@ class PhraseMaker {
         };
 
         if (condition === "tupletvalue") {
-            let __enterValue = () => {
-                let i = this._menuWheel.selectedNavItemIndex;
-                let value = mainTabsLabels[i];
+            const __enterValue = () => {
+                const i = this._menuWheel.selectedNavItemIndex;
+                const value = mainTabsLabels[i];
 
                 this.newNoteValue = String(value);
                 docById("wheelnav-_exitWheel-title-1").children[0].textContent =
@@ -3845,9 +3845,9 @@ class PhraseMaker {
             let first = false;
             let second = false;
 
-            let __enterValue = () => {
-                let i = this._menuWheel.selectedNavItemIndex;
-                let value = mainTabsLabels[i];
+            const __enterValue = () => {
+                const i = this._menuWheel.selectedNavItemIndex;
+                const value = mainTabsLabels[i];
                 if (!first) {
                     this.newNoteValue = String(value) + "/";
                     docById(
@@ -3867,7 +3867,7 @@ class PhraseMaker {
 
             this._menuWheel.navItems[0].navigateFunction = () => {
                 if (second && first) {
-                    let word = this.newNoteValue.split("/");
+                    const word = this.newNoteValue.split("/");
                     this.newNoteValue = word[0] + "/";
                     docById(
                         "wheelnav-_exitWheel-title-1"
@@ -3884,7 +3884,7 @@ class PhraseMaker {
 
             this._menuWheel.navItems[1].navigateFunction = () => {
                 if (second && first) {
-                    let word = this.newNoteValue.split("/");
+                    const word = this.newNoteValue.split("/");
                     this._updateTuplet(
                         noteToDivide,
                         parseInt(word[1]) / parseInt(word[0]),
@@ -3934,7 +3934,7 @@ class PhraseMaker {
 
             for (let i = 12; i < 19; i++) {
                 this._tabsWheel.navItems[i].navigateFunction = () => {
-                    let j = this._tabsWheel.selectedNavItemIndex;
+                    const j = this._tabsWheel.selectedNavItemIndex;
                     this.newNoteValue = tabsLabels[j];
                     docById(
                         "wheelnav-wheelDivptm-title-3"
@@ -3947,8 +3947,8 @@ class PhraseMaker {
     makeClickable() {
         // Once the entire matrix is generated, this function makes it
         // clickable.
-        let rowNote = this._noteValueRow;
-        let rowTuplet = this._tupletValueRow;
+        const rowNote = this._noteValueRow;
+        const rowTuplet = this._tupletValueRow;
         let cell, cellTuplet;
         for (let j = 0; j < rowNote.cells.length; j++) {
             cell = rowNote.cells[j];
@@ -3968,7 +3968,7 @@ class PhraseMaker {
                 if (this._mouseDownCell !== this._mouseUpCell) {
                     this._tieNotes(this._mouseDownCell, this._mouseUpCell);
                 } else {
-                    let nodes = Array.prototype.slice.call(
+                    const nodes = Array.prototype.slice.call(
                         this.parentElement.children
                     );
                     this._createpiesubmenu(
@@ -4014,7 +4014,7 @@ class PhraseMaker {
             }
         }
 
-        let rowCount = this.rowLabels.length;
+        const rowCount = this.rowLabels.length;
         let row;
         for (let i = 0; i < rowCount; i++) {
             row = this._rows[i];
@@ -4041,9 +4041,9 @@ class PhraseMaker {
 
                 cell.onmousedown = (evt) => {
                     isMouseDown = true;
-                    let cell = evt.target;
-                    let i = Number(cell.getAttribute("data-i"));
-                    let j = Number(cell.getAttribute("data-j"));
+                    const cell = evt.target;
+                    const i = Number(cell.getAttribute("data-i"));
+                    const j = Number(cell.getAttribute("data-j"));
                     if (cell.style.backgroundColor === "black") {
                         cell.style.backgroundColor = cell.getAttribute(
                             "cellColor"
@@ -4057,9 +4057,9 @@ class PhraseMaker {
                 };
 
                 cell.onmouseover = (evt) => {
-                    let cell = evt.target;
-                    let i = Number(cell.getAttribute("data-i"));
-                    let j = Number(cell.getAttribute("data-j"));
+                    const cell = evt.target;
+                    const i = Number(cell.getAttribute("data-i"));
+                    const j = Number(cell.getAttribute("data-j"));
                     if (isMouseDown) {
                         if (cell.style.backgroundColor === "black") {
                             cell.style.backgroundColor = cell.getAttribute(
@@ -4198,10 +4198,10 @@ class PhraseMaker {
             this._notesCounter = 0;
 
             // We have an array of pitches and note values.
-            let note = this._notesToPlay[this._notesCounter][0];
-            let pitchNotes = [];
-            let synthNotes = [];
-            let drumNotes = [];
+            const note = this._notesToPlay[this._notesCounter][0];
+            const pitchNotes = [];
+            const synthNotes = [];
+            const drumNotes = [];
             let drumName, obj;
 
             // Note can be a chord, hence it is an array.
@@ -4237,7 +4237,7 @@ class PhraseMaker {
                 this._stopOrCloseClicked = false;
             }
 
-            let noteValue = this._notesToPlay[this._notesCounter][1];
+            const noteValue = this._notesToPlay[this._notesCounter][1];
 
             this._notesCounter += 1;
 
@@ -4247,7 +4247,7 @@ class PhraseMaker {
             let row = this._noteValueRow;
 
             // Highlight first note.
-            let cell = row.cells[this._colIndex];
+            const cell = row.cells[this._colIndex];
             cell.style.backgroundColor = platformColor.selectorBackground;
 
             let tupletCell;
@@ -4314,7 +4314,7 @@ class PhraseMaker {
             "E", "E", "F", "F", "F♯", "G♭", "G", "G",
             "G♯", "A♭", "A", "A", "A♯", "B♭", "B", "B"
         ];
-        let notes = [];
+        const notes = [];
         let row, cell, note;
         for (let i = 0; i < this._colBlocks.length; i++) {
             note = [];
@@ -4420,9 +4420,9 @@ class PhraseMaker {
                 noteValue = this._notesToPlay[this._notesCounter][1];
                 this._notesCounter += 1;
 
-                let pitchNotes = [];
-                let synthNotes = [];
-                let drumNotes = [];
+                const pitchNotes = [];
+                const synthNotes = [];
+                const drumNotes = [];
                 let drumName, obj;
                 // Note can be a chord, hence it is an array.
                 if (!this._stopOrCloseClicked) {
@@ -4592,7 +4592,7 @@ class PhraseMaker {
                 this._logo.turtles.turtleList[0].painter.doSetChroma(obj[1]);
                 break;
             case "settranslucency":
-                let alpha = 1.0 - obj[1] / 100;
+                const alpha = 1.0 - obj[1] / 100;
                 this._logo.turtles.turtleList[0].painter.doSetPenAlpha(alpha);
                 break;
             case "setpensize":
@@ -4616,10 +4616,10 @@ class PhraseMaker {
     _setNotes(colIndex, rowIndex, playNote) {
         // Sets corresponding note when user clicks on any cell and
         // plays that note
-        let rowBlock = this._rowBlocks[
+        const rowBlock = this._rowBlocks[
             this._rowMap.indexOf(rowIndex - this._rowOffset[rowIndex])
         ];
-        let rhythmBlockObj = this._colBlocks[colIndex];
+        const rhythmBlockObj = this._colBlocks[colIndex];
 
         if (playNote) {
             this.addNode(
@@ -4640,7 +4640,7 @@ class PhraseMaker {
     }
 
     _setNoteCell(j, colIndex, cell, playNote) {
-        let note = this._noteStored[j];
+        const note = this._noteStored[j];
         let drumName, graphicsBlock, graphicNote, obj;
         if (this.rowLabels[j] === "hertz") {
             drumName = null;
@@ -4660,11 +4660,11 @@ class PhraseMaker {
             obj = note.split(": ");
         }
 
-        let row = this._rows[j];
+        const row = this._rows[j];
         cell = row.cells[colIndex];
 
         // Using the alt attribute to store the note value
-        let noteValue = cell.getAttribute("alt") * Singer.defaultBPMFactor;
+        const noteValue = cell.getAttribute("alt") * Singer.defaultBPMFactor;
 
         if (obj.length === 1) {
             if (playNote) {
@@ -4743,12 +4743,12 @@ class PhraseMaker {
          * note and pitch blocks (saving as chunks is deprecated). */
 
         // First, hide the palettes as they will need updating.
-        for (let name in this._logo.blocks.palettes.dict) {
+        for (const name in this._logo.blocks.palettes.dict) {
             this._logo.blocks.palettes.dict[name].hideMenu(true);
         }
         this._logo.refreshCanvas();
 
-        let newStack = [
+        const newStack = [
             [
                 0,
                 ["action", { collapsed: true }],
@@ -4897,7 +4897,7 @@ class PhraseMaker {
             newStack[idx][4][1] = idx + 2; // divide block
             newStack[idx][4][2] = idx + 1; // vspace block
 
-            let x = idx + delta;
+            const x = idx + delta;
             let lastConnection, previousBlock, thisBlock;
 
             if (note[0][0] === "R" || note[0][0] == undefined) {
