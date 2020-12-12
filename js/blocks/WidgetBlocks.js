@@ -1056,7 +1056,7 @@ function setupWidgetBlocks() {
                     // Process queued up rhythms.
                     logo.phraseMaker.blockNo = blk;
                     logo.phraseMaker.sorted = false;
-                    logo.phraseMaker.init(logo);
+                    logo.phraseMaker.init();
 
                     for (let i = 0; i < logo.tupletRhythms.length; i++) {
                         // We have two cases: (1) notes in a tuplet;
