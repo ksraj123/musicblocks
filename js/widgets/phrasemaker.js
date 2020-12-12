@@ -35,7 +35,7 @@ class PhraseMaker {
 
     constructor() {
         this._stopOrCloseClicked = false;
-        this._instrumentName = DEFAULTVOICE;
+        this.instrumentName = DEFAULTVOICE;
 
         this.paramsEffects = {
             doVibrato: false,
@@ -239,7 +239,7 @@ class PhraseMaker {
                 this._rowMap[i] = i;
             }
 
-            this._logo.synth.stopSound(0, this._instrumentName);
+            this._logo.synth.stopSound(0, this.instrumentName);
             this._logo.synth.stop();
             this._stopOrCloseClicked = true;
             this._logo.hideMsgs();
@@ -4273,7 +4273,7 @@ class PhraseMaker {
                     0,
                     [Number(synthNotes[i])],
                     Singer.defaultBPMFactor / noteValue,
-                    this._instrumentName,
+                    this.instrumentName,
                     null,
                     null
                 );
@@ -4469,7 +4469,7 @@ class PhraseMaker {
                         0,
                         [Number(synthNotes[i])],
                         Singer.defaultBPMFactor / noteValue,
-                        this._instrumentName,
+                        this.instrumentName,
                         null,
                         null
                     );
@@ -4519,7 +4519,7 @@ class PhraseMaker {
                 0,
                 notes[0],
                 noteValue,
-                this._instrumentName,
+                this.instrumentName,
                 null,
                 null
             );
@@ -4531,7 +4531,7 @@ class PhraseMaker {
                     0,
                     notes[1],
                     noteValue,
-                    this._instrumentName,
+                    this.instrumentName,
                     null,
                     null
                 );
@@ -4544,7 +4544,7 @@ class PhraseMaker {
                     0,
                     notes[2],
                     noteValue,
-                    this._instrumentName,
+                    this.instrumentName,
                     null,
                     null
                 );
@@ -4557,7 +4557,7 @@ class PhraseMaker {
                     0,
                     notes[3],
                     noteValue,
-                    this._instrumentName,
+                    this.instrumentName,
                     null,
                     null
                 );
@@ -4682,7 +4682,7 @@ class PhraseMaker {
                         0,
                         Number(note),
                         noteValue,
-                        this._instrumentName,
+                        this.instrumentName,
                         null,
                         null
                     );
@@ -4692,7 +4692,7 @@ class PhraseMaker {
                             0,
                             note.replace(/♭/g, "b").replace(/♯/g, "#"),
                             noteValue,
-                            this._instrumentName,
+                            this.instrumentName,
                             null,
                             null
                         );
@@ -4701,7 +4701,7 @@ class PhraseMaker {
                             0,
                             note,
                             noteValue,
-                            this._instrumentName,
+                            this.instrumentName,
                             null,
                             null
                         );

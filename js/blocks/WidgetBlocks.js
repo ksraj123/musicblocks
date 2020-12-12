@@ -1027,7 +1027,7 @@ function setupWidgetBlocks() {
             }
             logo.phraseMaker.blockNo = blk;
 
-            logo.phraseMaker._instrumentName = DEFAULTVOICE;
+            logo.phraseMaker.instrumentName = DEFAULTVOICE;
 
             logo.phraseMaker.rowLabels = [];
             logo.phraseMaker.rowArgs = [];
