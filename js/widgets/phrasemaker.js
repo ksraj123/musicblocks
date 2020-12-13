@@ -10,6 +10,39 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
+/*global logo, turtles, _, platformColor, docById, MATRIXSOLFEHEIGHT, toFraction, Singer,
+  SOLFEGECONVERSIONTABLE, slicePath, wheelnav, delayExecution, DEFAULTVOICE, getDrumName,
+  MATRIXSOLFEWIDTH, getDrumIcon, noteIsSolfege, isCustom, i18nSolfege, getNote, DEFAULTDRUM,
+  last, DRUMS, SHARP, FLAT, PREVIEWVOLUME, DEFAULTVOLUME, noteToFrequency, getDrumIndex, LCD,
+  calcNoteValueToDisplay, NOTESYMBOLS, EIGHTHNOTEWIDTH, saveLocally*/
+
+/*
+    Globals location
+    - lib/wheelnav
+        slicePath, wheelnav
+    
+    - js/utils/musicutils.js
+        EIGHTHNOTEWIDTH, NOTESYMBOLS, calcNoteValueToDisplay, getDrumIndex, noteToFrequency,
+        FLAT, SHARP, DRUMS, MATRIXSOLFEHEIGHT, toFraction, SOLFEGECONVERSIONTABLE, DEFAULTVOICE,
+        getDrumName, MATRIXSOLFEWIDTH, getDrumIcon, noteIsSolfege, isCustom, i18nSolfege,
+        getNote, DEFAULTDRUM
+    
+    - js/utils/utils.js
+        _, delayExecution, last, LCD
+    
+    - js/turtle-singer.js
+        Singer, docById
+    
+    - js/utils/platformstyle.js
+        platformColorcl
+    
+    - js/logo.js
+        PREVIEWVOLUME, DEFAULTVOLUME
+    
+    - js/activity.js
+        saveLocally(window, planet)
+*/
+
 class PhraseMaker {
     // The phrasemaker widget
     static BUTTONDIVWIDTH = 535; // 8 buttons 535 = (55 + 4) * 9
@@ -311,7 +344,7 @@ class PhraseMaker {
         // first column and a table of buttons in the second column.
         if (!this.sorted) {
             this.columnBlocksMap = this._mapNotesBlocks("all", true);
-            for (i = 0; i < this.columnBlocksMap.length; i++) {
+            for (let i = 0; i < this.columnBlocksMap.length; i++) {
                 if (
                     PhraseMaker.MATRIXGRAPHICS.indexOf(this.columnBlocksMap[i][1]) !== -1 ||
                     PhraseMaker.MATRIXGRAPHICS2.indexOf(this.columnBlocksMap[i][1]) !==
@@ -529,7 +562,7 @@ class PhraseMaker {
                 cell.setAttribute("alt", i + "__" + "graphicsblocks");
 
                 cell.onclick = (event) => {
-                    eCell = event.target;
+                    let eCell = event.target;
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
@@ -1210,8 +1243,8 @@ class PhraseMaker {
 
             // Update the cell label.
             let blockLabel;
-            cell = this._headcols[blockIndex];
-            iconSize = PhraseMaker.ICONSIZE * (window.innerWidth / 1200);
+            let cell = this._headcols[blockIndex];
+            const iconSize = PhraseMaker.ICONSIZE * (window.innerWidth / 1200);
             if (PhraseMaker.MATRIXGRAPHICS2.indexOf(this.rowLabels[blockIndex]) !== -1) {
                 cell.innerHTML =
                     '&nbsp;&nbsp;<img src="' +
@@ -1238,7 +1271,7 @@ class PhraseMaker {
                 cell.style.fontSize = Math.floor(this._cellScale * 12) + "px";
             }
 
-            noteStored =
+            const noteStored =
                 this.rowLabels[blockIndex] +
                 ": " +
                 this.rowArgs[blockIndex][0] +
@@ -2682,7 +2715,7 @@ class PhraseMaker {
         }
 
         // First, ensure that the matrix is set up for tuplets.
-        let firstRow, labelCell, noteRow, valueRow, noteValueRow, cell;
+        let firstRow, labelCell, noteRow, valueRow, cell;
         if (!this._matrixHasTuplets) {
             firstRow = this._rows[0];
 
@@ -2845,7 +2878,7 @@ class PhraseMaker {
         cell.style.backgroundColor = platformColor.tupletBackground;
 
         // And a span in the note value column too.
-        noteValueRow = this._noteValueRow;
+        const noteValueRow = this._noteValueRow;
         cell = noteValueRow.insertCell();
         cell.colSpan = numberOfNotes;
         cell.style.fontSize = Math.floor(this._cellScale * 75) + "%";
@@ -3960,11 +3993,11 @@ class PhraseMaker {
                     this._tieNotes(this._mouseDownCell, this._mouseUpCell);
                 } else {
                     const nodes = Array.prototype.slice.call(
-                        this.parentElement.children
+                        this._mouseUpCell.parentElement.children
                     );
                     this._createpiesubmenu(
                         nodes.indexOf(this),
-                        this.getAttribute("alt"),
+                        this._mouseUpCell.getAttribute("alt"),
                         "rhythmnote"
                     );
                 }
@@ -3972,26 +4005,29 @@ class PhraseMaker {
 
             if (cellTuplet !== undefined) {
                 if (logo.tupletRhythms[0][0] === "notes") {
-                    cell.onclick = () => {
+                    cell.onclick = (event) => {
+                        const cell = event.target;
                         this._createpiesubmenu(
-                            this.getAttribute("id"),
+                            cell.getAttribute("id"),
                             null,
                             "tupletnote"
                         );
                     };
                 } else {
-                    cell.onclick = () => {
+                    cell.onclick = (event) => {
+                        const cell = event.target;
                         this._createpiesubmenu(
-                            this.getAttribute("id"),
+                            cell.getAttribute("id"),
                             null,
                             "simpletupletnote"
                         );
                     };
 
-                    cellTuplet.onclick = () => {
+                    cellTuplet.onclick = (event) => {
+                        const cell = event.target;
                         this._createpiesubmenu(
-                            this.getAttribute("id"),
-                            this.getAttribute("colspan"),
+                            cell.getAttribute("id"),
+                            cell.getAttribute("colspan"),
                             "tupletvalue"
                         );
                     };
@@ -4583,8 +4619,7 @@ class PhraseMaker {
                 turtles.turtleList[0].painter.doSetChroma(obj[1]);
                 break;
             case "settranslucency":
-                const alpha = 1.0 - obj[1] / 100;
-                turtles.turtleList[0].painter.doSetPenAlpha(alpha);
+                turtles.turtleList[0].painter.doSetPenAlpha(1.0 - obj[1] / 100);
                 break;
             case "setpensize":
                 turtles.turtleList[0].painter.doSetPensize(obj[1]);
