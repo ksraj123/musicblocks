@@ -529,7 +529,7 @@ class PhraseMaker {
                 cell.setAttribute("alt", i + "__" + "graphicsblocks");
 
                 cell.onclick = (event) => {
-                    eCell = event.target;
+                    let eCell = event.target;
                     if (eCell.getAttribute("alt") === null) {
                         eCell = eCell.parentNode;
                     }
@@ -3960,11 +3960,11 @@ class PhraseMaker {
                     this._tieNotes(this._mouseDownCell, this._mouseUpCell);
                 } else {
                     const nodes = Array.prototype.slice.call(
-                        this.parentElement.children
+                        this._mouseUpCell.parentElement.children
                     );
                     this._createpiesubmenu(
                         nodes.indexOf(this),
-                        this.getAttribute("alt"),
+                        this._mouseUpCell.getAttribute("alt"),
                         "rhythmnote"
                     );
                 }
@@ -3972,26 +3972,29 @@ class PhraseMaker {
 
             if (cellTuplet !== undefined) {
                 if (logo.tupletRhythms[0][0] === "notes") {
-                    cell.onclick = () => {
+                    cell.onclick = (event) => {
+                        const cell = event.target;
                         this._createpiesubmenu(
-                            this.getAttribute("id"),
+                            cell.getAttribute("id"),
                             null,
                             "tupletnote"
                         );
                     };
                 } else {
-                    cell.onclick = () => {
+                    cell.onclick = (event) => {
+                        const cell = event.target;
                         this._createpiesubmenu(
-                            this.getAttribute("id"),
+                            cell.getAttribute("id"),
                             null,
                             "simpletupletnote"
                         );
                     };
 
-                    cellTuplet.onclick = () => {
+                    cellTuplet.onclick = (event) => {
+                        const cell = event.target;
                         this._createpiesubmenu(
-                            this.getAttribute("id"),
-                            this.getAttribute("colspan"),
+                            cell.getAttribute("id"),
+                            cell.getAttribute("colspan"),
                             "tupletvalue"
                         );
                     };
