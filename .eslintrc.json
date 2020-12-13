@@ -18,7 +18,7 @@
         "ignoreReadBeforeAssign": true
       }
     ],
-    "no-undef": "off",
+    "no-undef": "warn",
     "no-unused-vars": "off",
     "indent": ["warn", 4, { "SwitchCase": 1 }],
     "quotes": ["warn", "double", { "avoidEscape": true }],
