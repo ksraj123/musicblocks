@@ -142,14 +142,14 @@ class PhraseMaker {
         this.notesBlockMap = [];
         this._blockMapHelper = [];
         this.columnBlocksMap = [];
-
+        /*
         this._updateTupletValue = this._updateTupletValue.bind(this);
         this._updateTuplet = this._updateTuplet.bind(this);
         this._restartGrid = this._restartGrid.bind(this);
         this._deleteNotes = this._deleteNotes.bind(this);
         this._addNotes = this._addNotes.bind(this);
         this._divideNotes = this._divideNotes.bind(this);
-
+        */
     }
 
     clearBlocks() {
@@ -3381,9 +3381,9 @@ class PhraseMaker {
                 .slice(0, noteToDivide + i + 1)
                 .concat(logo.tupletRhythms.slice(noteToDivide + i));
         }
-        this._readjustNotesBlocks();
-        this._syncMarkedBlocks();
-        this._restartGrid();
+        this._readjustNotesBlocks.call(this);
+        this._syncMarkedBlocks.call(this);
+        this._restartGrid.call(this);
     }
 
     _deleteNotes(noteToDivide) {
@@ -3405,9 +3405,9 @@ class PhraseMaker {
         logo.tupletRhythms = logo.tupletRhythms
             .slice(0, noteToDivide)
             .concat(logo.tupletRhythms.slice(noteToDivide + 1));
-        this._readjustNotesBlocks();
-        this._syncMarkedBlocks();
-        this._restartGrid();
+        this._readjustNotesBlocks.call(this);
+        this._syncMarkedBlocks.call(this);
+        this._restartGrid.call(this);
     }
 
     _divideNotes(noteToDivide, divideNoteBy) {
@@ -3442,9 +3442,9 @@ class PhraseMaker {
             j++;
             this._blockMapHelper.push([this._colBlocks[i], [j]]);
         }
-        this._readjustNotesBlocks();
-        this._syncMarkedBlocks();
-        this._restartGrid();
+        this._readjustNotesBlocks.call(this);
+        this._syncMarkedBlocks.call(this);
+        this._restartGrid.call(this);
     }
 
     _tieNotes(mouseDownCell, mouseUpCell) {
@@ -3499,7 +3499,7 @@ class PhraseMaker {
 
     _updateTuplet(noteToDivide, newNoteValue, condition) {
         logo.tupletParams[noteToDivide][1] = newNoteValue;
-        this._restartGrid();
+        this._restartGrid.call(this);
         let notesBlockMap;
         if (condition === "simpletupletnote") {
             notesBlockMap = this._mapNotesBlocks("stuplet");
@@ -3636,8 +3636,8 @@ class PhraseMaker {
             }
         }
         this._colBlocks = colBlocks;
-        this._restartGrid();
-        this._syncMarkedBlocks();
+        this._restartGrid.call(this);
+        this._syncMarkedBlocks.call(this);
         this._update(
             notesBlockMap[noteToDivide],
             null,
@@ -3647,6 +3647,7 @@ class PhraseMaker {
     }
 
     _createpiesubmenu(noteToDivide, tupletValue, condition) {
+        console.log("In createPiesSubmenu");
         docById("wheelDivptm").style.display = "";
 
         this._menuWheel = new wheelnav("wheelDivptm", null, 800, 800);
@@ -3793,6 +3794,11 @@ class PhraseMaker {
 
         let x = 0, y = 0;
         if (noteToDivide !== null) {
+            console.log("noteToDivide");
+            console.log(noteToDivide);
+            console.log(this._noteValueRow);
+            console.log(this._noteValueRow.cells);
+            console.log(this._noteValueRow.cells[noteToDivide]);
             const ntd = this._noteValueRow.cells[noteToDivide];
             x = ntd.getBoundingClientRect().x;
             y = ntd.getBoundingClientRect().y;
@@ -3823,7 +3829,8 @@ class PhraseMaker {
                 this.newNoteValue = String(value);
                 docById("wheelnav-_exitWheel-title-1").children[0].textContent =
                     this.newNoteValue;
-                this._updateTupletValue(
+                this._updateTupletValue.call(
+                    this,
                     noteToDivide,
                     tupletValue,
                     this.newNoteValue
@@ -3836,7 +3843,8 @@ class PhraseMaker {
                     docById(
                         "wheelnav-_exitWheel-title-1"
                     ).children[0].textContent = this.newNoteValue;
-                    this._updateTupletValue(
+                    this._updateTupletValue.call(
+                        this,
                         noteToDivide,
                         tupletValue,
                         this.newNoteValue
@@ -3848,7 +3856,8 @@ class PhraseMaker {
                 this.newNoteValue = String(parseInt(this.newNoteValue) + 1);
                 docById("wheelnav-_exitWheel-title-1").children[0].textContent =
                     this.newNoteValue;
-                this._updateTupletValue(
+                this._updateTupletValue.call(
+                    this,
                     noteToDivide,
                     tupletValue,
                     this.newNoteValue
@@ -3860,7 +3869,7 @@ class PhraseMaker {
                     continue;
                 }
 
-                this._menuWheel.navItems[i].navigateFunction = __enterValue;
+                this._menuWheel.navItems[i].navigateFunction = (__enterValue).bind(this);
             }
         } else if (
             condition === "simpletupletnote" ||
@@ -3909,7 +3918,8 @@ class PhraseMaker {
             this._menuWheel.navItems[1].navigateFunction = () => {
                 if (second && first) {
                     const word = this.newNoteValue.split("/");
-                    this._updateTuplet(
+                    this._updateTuplet.call(
+                        this,
                         noteToDivide,
                         parseInt(word[1]) / parseInt(word[0]),
                         condition
@@ -3923,15 +3933,15 @@ class PhraseMaker {
         } else if (condition === "rhythmnote") {
             let flag = 0;
             this._menuWheel.navItems[0].navigateFunction = () => {
-                this._divideNotes(noteToDivide, this.newNoteValue);
+                this._divideNotes.call(this, noteToDivide, this.newNoteValue);
             };
 
             this._menuWheel.navItems[1].navigateFunction = () => {
-                this._deleteNotes(noteToDivide);
+                this._deleteNotes.call(this, noteToDivide);
             };
 
             this._menuWheel.navItems[2].navigateFunction = () => {
-                this._addNotes(noteToDivide, this.newNoteValue);
+                this._addNotes.call(this, noteToDivide, this.newNoteValue);
             };
 
             this._menuWheel.navItems[3].navigateFunction = () => {
@@ -3988,15 +3998,19 @@ class PhraseMaker {
             };
 
             const __mouseUpHandler = (event) => {
+                console.log("here4");
                 this._mouseUpCell = event.target;
                 if (this._mouseDownCell !== this._mouseUpCell) {
+                    console.log("here5");
                     this._tieNotes(this._mouseDownCell, this._mouseUpCell);
                 } else {
+                    console.log("here6");
                     const nodes = Array.prototype.slice.call(
                         this._mouseUpCell.parentElement.children
                     );
-                    this._createpiesubmenu(
-                        nodes.indexOf(this),
+                    this._createpiesubmenu.call(
+                        this,
+                        nodes.indexOf(this._mouseUpCell),
                         this._mouseUpCell.getAttribute("alt"),
                         "rhythmnote"
                     );
@@ -4006,8 +4020,10 @@ class PhraseMaker {
             if (cellTuplet !== undefined) {
                 if (logo.tupletRhythms[0][0] === "notes") {
                     cell.onclick = (event) => {
+                        console.log("here2");
                         const cell = event.target;
-                        this._createpiesubmenu(
+                        this._createpiesubmenu.call(
+                            this,
                             cell.getAttribute("id"),
                             null,
                             "tupletnote"
@@ -4015,8 +4031,10 @@ class PhraseMaker {
                     };
                 } else {
                     cell.onclick = (event) => {
+                        console.log("here1");
                         const cell = event.target;
-                        this._createpiesubmenu(
+                        this._createpiesubmenu.call(
+                            this,
                             cell.getAttribute("id"),
                             null,
                             "simpletupletnote"
@@ -4025,7 +4043,9 @@ class PhraseMaker {
 
                     cellTuplet.onclick = (event) => {
                         const cell = event.target;
-                        this._createpiesubmenu(
+                        console.log("here3");
+                        this._createpiesubmenu.call(
+                            this,
                             cell.getAttribute("id"),
                             cell.getAttribute("colspan"),
                             "tupletvalue"
@@ -4646,6 +4666,14 @@ class PhraseMaker {
             this._rowMap.indexOf(rowIndex - this._rowOffset[rowIndex])
         ];
         const rhythmBlockObj = this._colBlocks[colIndex];
+
+        if (rhythmBlockObj == undefined){
+            console.log("From _setNotes");
+            console.log(colIndex);
+            console.log(rowIndex);
+            console.log(playNote);
+            console.log(this._colBlocks)
+        }
 
         if (playNote) {
             this.addNode(
