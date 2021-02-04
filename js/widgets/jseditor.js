@@ -14,6 +14,26 @@
  * MA 02110-1335 USA.
 */
 
+/*global docById, hljs, CodeJar, MusicBlocks, JSGenerate, JS_API*/
+
+/*
+     Globals locations
+     
+    - js/utils/utils.js
+        docById
+    - lib/codejar/highlight.pack.js
+        hljs
+    - lib/codejar/codejar.min.js
+        CodeJar
+    - js/js-export/export.js
+        MusicBlocks
+    - js/js-export/generate.js
+        JSGenerate
+    - js/js-export/samples/sample.js
+        JS_API
+ */
+
+/* exported JSEditor */
 /**
  * @class
  * @classdesc pertains to setting up all features of the JavsScript Editor for writing and reviewing
@@ -249,7 +269,7 @@ class JSEditor {
         this._editor.appendChild(editorconsole);
 
         const highlight = (editor) => {
-            editor.textContent = editor.textContent;
+            //this._editor.textContent = editor.textContent;
             hljs.highlightBlock(editor);
         };
 
@@ -261,7 +281,7 @@ class JSEditor {
         this._jar.updateCode(this._code);
         this._jar.updateOptions({
             tab: " ".repeat(4), // default is '\t'
-            indentOn: /[(\[]$/, // default is /{$/
+            indentOn: /[([]$/, // default is /{$/
             spellcheck: false,  // default is false
             addClosing: true    // default is true
         });
@@ -292,9 +312,10 @@ class JSEditor {
                 docById("editorConsole").innerHTML += "</br>";
             docById("editorConsole").innerHTML += `<span style="color: ${color}">${message}</span>`;
         } else {
+            // eslint-disable-next-line no-console
             console.error("EDITOR MISSING!");
         }
-        console.log("%c" + message, `color: ${color}`);
+        // console.log("%c" + message, `color: ${color}`);
     }
 
     /**
@@ -310,7 +331,7 @@ class JSEditor {
         if (docById("editorConsole"))
             docById("editorConsole").innerHTML = "";
 
-        console.debug("Run JavaScript");
+        // console.debug("Run JavaScript");
 
         try {
             MusicBlocks.init(true);
@@ -327,7 +348,7 @@ class JSEditor {
      * @returns {void}
      */
     _generateCode() {
-        console.debug("Generate JavaScript");
+        // console.debug("Generate JavaScript");
 
         JSGenerate.run(true);
         this._code = JSGenerate.code;
@@ -364,13 +385,13 @@ class JSEditor {
         const helpBtn = docById("js_editor_help_btn");
 
         if (this._showingHelp) {
-            console.debug("Showing Help");
+            // console.debug("Showing Help");
             helpBtn.style.color = "gold";
             this._codeBck = this._code;
             this._jar.updateCode(JS_API);
             this._setLinesCount(JS_API);
         } else {
-            console.debug("Hiding Help");
+            // console.debug("Hiding Help");
             helpBtn.style.color = "white";
             this._jar.updateCode(this._codeBck);
             this._setLinesCount(this._codeBck);
