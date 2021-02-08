@@ -9,6 +9,31 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
+/*global _, toFraction, last, SHARP, FLAT, frequencyToPitch, NATURAL, DOUBLESHARP, DOUBLEFLAT,
+getScaleAndHalfSteps, NOTATIONTUPLETVALUE, NOTATIONNOTE, NOTATIONDURATION, NOTATIONROUNDDOWN,
+NOTATIONSTACCATO, NOTATIONDOTCOUNT, prepareExport*/
+
+/*
+     Globals location
+     - lib/wheelnav
+         slicePath, wheelnav
+     
+     - js/utils/musicutils.js
+         toFraction, frequencyToPitch, NATURAL, DOUBLESHARP, DOUBLEFLAT, getScaleAndHalfSteps
+     
+     - js/utils/utils.js
+         _, last
+
+     - js/logo.js
+        NOTATIONNOTE, NOTATIONTUPLETVALUE, NOTATIONDURATION, NOTATIONROUNDDOWN, NOTATIONSTACCATO,
+        NOTATIONDOTCOUNT
+
+     - js/activity.js
+        prepareExport
+ */
+
+/* exported saveLilypondOutput */
+
 let MIDIOutput, guitarOutputHead, guitarOutputEnd;
 
 // This header is prepended to the Lilypond output.
@@ -46,11 +71,15 @@ const RODENTSEN = [
 ];
 const CLEFS = ["treble", "bass", "bass_8", "percussion"];
 
-getLilypondHeader = function() {
+/**
+ * @deprecated
+ */
+// eslint-disable-next-line no-unused-vars
+const getLilypondHeader = function() {
     return LILYPONDHEADER;
 };
 
-processLilypondNotes = function(lilypond, logo, turtle) {
+const processLilypondNotes = function(lilypond, logo, turtle) {
     // obj = [instructions] or
     // obj = [note, duration, dotCount, tupletValue, roundDown, insideChord, staccato]
 
@@ -97,6 +126,93 @@ processLilypondNotes = function(lilypond, logo, turtle) {
     let obj;
     let note;
     let notes;
+
+    function __processTuplet(logo, turtle, i, count) {
+        let j = 0;
+        let k = 0;
+        let ii;
+
+        while (k < count) {
+            tupletDuration = 2 *
+                logo.notation.notationStaging[turtle][i + j][
+                    NOTATIONDURATION];
+
+            notes = logo.notation.notationStaging[turtle][i + j][
+                NOTATIONNOTE];
+            if (typeof notes === "object") {
+                if (notes.length > 1) {
+                    logo.notationNotes[turtle] += "<";
+                }
+
+                for (ii = 0; ii < notes.length; ii++) {
+                    logo.notationNotes[turtle] += __toLilynote(
+                        notes[ii]
+                    );
+                    if (notes.length === 1 || ii < notes.length - 1) {
+                        logo.notationNotes[turtle] += " ";
+                    }
+                }
+
+                if (obj[NOTATIONSTACCATO]) {
+                    logo.notationNotes[turtle] += " \\staccato ";
+                }
+
+                if (notes.length > 1) {
+                    logo.notationNotes[turtle] += ">";
+                }
+
+                logo.notationNotes[turtle] +=
+                    logo.notation.notationStaging[turtle][i + j][
+                        NOTATIONROUNDDOWN
+                    ];
+                j++; // Jump to next note.
+                k++; // Increment notes in tuplet.
+            } else if (logo.notation.notationStaging[turtle][i + j] === "tie") {
+                // console.debug("adding a tie");
+                logo.notationNotes[turtle] += "~";
+                j++; // Jump to next note.
+                k++; // Increment notes in tuplet.
+            } else {
+                // console.debug("ignoring " + notes);
+                j++; // Jump to next note.
+                k++; // Increment notes in tuplet.
+            }
+        }
+
+        if (i + j - 1 < logo.notation.notationStaging[turtle].length - 1) {
+            const nextObj = logo.notation.notationStaging[turtle][i + j];
+            // Workaround to a Lilypond "feature": if a slur
+            // ends on a tuplet, the closing ) must be inside
+            // the closing } of the tuplet. Same for markup.
+            if (typeof nextObj === "string" && nextObj === ")") {
+                logo.notationNotes[turtle] += ")} ";
+                i += 1;
+            } else if (
+                typeof nextObj === "string" &&
+                nextObj === "markup"
+            ) {
+                logo.notationNotes[turtle] +=
+                    "^\\markup { \\abs-fontsize #6 { " +
+                    logo.notation.notationStaging[turtle][i + j + 1] +
+                    " } } } ";
+                j += 2;
+            } else if (
+                typeof nextObj === "string" &&
+                nextObj === "markdown"
+            ) {
+                logo.notationNotes[turtle] += "_\\markup {" +
+                    logo.notation.notationStaging[turtle][i + j + 1] +
+                    "} } ";
+                j += 2;
+            } else {
+                logo.notationNotes[turtle] += "} ";
+            }
+        } else {
+            logo.notationNotes[turtle] += "} ";
+        }
+
+        return j;
+    }
 
     for (let i = 0; i < logo.notation.notationStaging[turtle].length; i++) {
         let obj = logo.notation.notationStaging[turtle][i];
@@ -252,7 +368,7 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                             }
 
                             modeDef += ")\n";
-                            console.debug(modeDef);
+                            // console.debug(modeDef);
                             lilypond.freygish += modeDef;
                             logo.notationNotes[turtle] +=
                             " \\key " +
@@ -387,7 +503,7 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                     }
 
                     if (logo.notation.notationStaging[turtle][i + j] === "tie") {
-                        console.debug("saw a tie");
+                        // console.debug("saw a tie");
                         k++; // Increment notes in tuplet.
                         j++;
                     } else if ([1, 0.5, 0.25, 0.125, 0.0625].indexOf(
@@ -443,93 +559,6 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                 }
             }
 
-            function __processTuplet(logo, turtle, i, count) {
-                let j = 0;
-                let k = 0;
-                let ii;
-
-                while (k < count) {
-                    tupletDuration = 2 *
-                        logo.notation.notationStaging[turtle][i + j][
-                            NOTATIONDURATION];
-
-                    notes = logo.notation.notationStaging[turtle][i + j][
-                        NOTATIONNOTE];
-                    if (typeof notes === "object") {
-                        if (notes.length > 1) {
-                            logo.notationNotes[turtle] += "<";
-                        }
-
-                        for (ii = 0; ii < notes.length; ii++) {
-                            logo.notationNotes[turtle] += __toLilynote(
-                                notes[ii]
-                            );
-                            if (notes.length === 1 || ii < notes.length - 1) {
-                                logo.notationNotes[turtle] += " ";
-                            }
-                        }
-
-                        if (obj[NOTATIONSTACCATO]) {
-                            logo.notationNotes[turtle] += " \\staccato ";
-                        }
-
-                        if (notes.length > 1) {
-                            logo.notationNotes[turtle] += ">";
-                        }
-
-                        logo.notationNotes[turtle] +=
-                            logo.notation.notationStaging[turtle][i + j][
-                                NOTATIONROUNDDOWN
-                            ];
-                        j++; // Jump to next note.
-                        k++; // Increment notes in tuplet.
-                    } else if (logo.notation.notationStaging[turtle][i + j] === "tie") {
-                        console.debug("adding a tie");
-                        logo.notationNotes[turtle] += "~";
-                        j++; // Jump to next note.
-                        k++; // Increment notes in tuplet.
-                    } else {
-                        console.debug("ignoring " + notes);
-                        j++; // Jump to next note.
-                        k++; // Increment notes in tuplet.
-                    }
-                }
-
-                if (i + j - 1 < logo.notation.notationStaging[turtle].length - 1) {
-                    const nextObj = logo.notation.notationStaging[turtle][i + j];
-                    // Workaround to a Lilypond "feature": if a slur
-                    // ends on a tuplet, the closing ) must be inside
-                    // the closing } of the tuplet. Same for markup.
-                    if (typeof nextObj === "string" && nextObj === ")") {
-                        logo.notationNotes[turtle] += ")} ";
-                        i += 1;
-                    } else if (
-                        typeof nextObj === "string" &&
-                        nextObj === "markup"
-                    ) {
-                        logo.notationNotes[turtle] +=
-                            "^\\markup { \\abs-fontsize #6 { " +
-                            logo.notation.notationStaging[turtle][i + j + 1] +
-                            " } } } ";
-                        j += 2;
-                    } else if (
-                        typeof nextObj === "string" &&
-                        nextObj === "markdown"
-                    ) {
-                        logo.notationNotes[turtle] += "_\\markup {" +
-                            logo.notation.notationStaging[turtle][i + j + 1] +
-                            "} } ";
-                        j += 2;
-                    } else {
-                        logo.notationNotes[turtle] += "} ";
-                    }
-                } else {
-                    logo.notationNotes[turtle] += "} ";
-                }
-
-                return j;
-            }
-
             if (
                 obj[NOTATIONTUPLETVALUE] != null &&
                 obj[NOTATIONTUPLETVALUE][0] * obj[NOTATIONTUPLETVALUE][1] > 0
@@ -544,7 +573,7 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                     );
                     let a = tupletFraction[0] * targetDuration;
                     let b = tupletFraction[0] * tupletFraction[1];
-		    let c;
+                    let c;
 
                     if (Math.floor(a) !== a) {
                         c = toFraction(a / 1);
@@ -570,7 +599,7 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                     const tupletFraction = toFraction(f);
                     let a = tupletFraction[0];
                     let b = tupletFraction[1];
-		    let c;
+                    let c;
                     if (Math.floor(a) !== a) {
                         c = toFraction(a / 1);
                         a = c[0];
@@ -591,7 +620,7 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                         logo.notationNotes[turtle] += "<";
                     }
 
-                    for (ii = 0; ii < notes.length; ii++) {
+                    for (let ii = 0; ii < notes.length; ii++) {
                         logo.notationNotes[turtle] += __toLilynote(notes[ii]);
                         if (ii < notes.length - 1) {
                             logo.notationNotes[turtle] += " ";
@@ -631,10 +660,7 @@ processLilypondNotes = function(lilypond, logo, turtle) {
     }
 };
 
-saveLilypondOutput = function(logo) {
-    // console.log("one function call");
-    // console.log('logo notation staging is');
-    // console.log(logo.notation.notationStaging);
+const saveLilypondOutput = function(logo) {
     const NUMBERNAMES = [
         "zero",
         "one",
@@ -651,9 +677,7 @@ saveLilypondOutput = function(logo) {
     const clef = [];
     const freygish = ""; // A place to store custom mode definitions
 
-    for (const t in logo.notation.notationStaging) {
-        turtleCount += 1;
-    }
+    turtleCount += Object.keys(logo.notation.notationStaging).length;
 
     const startDrums = turtleCount;
     for (const t in logo.notation.notationDrumStaging) {
@@ -676,6 +700,7 @@ saveLilypondOutput = function(logo) {
         turtleCount += 1;
     }
 
+    // eslint-disable-next-line no-console
     console.debug("saving as lilypond: " + turtleCount);
 
     logo.notationOutput +=
@@ -716,6 +741,7 @@ saveLilypondOutput = function(logo) {
             if (tNumber > startDrums - 1) {
                 clef.push("percussion");
             } else if (noteCount > 0) {
+                // eslint-disable-next-line no-console
                 console.debug(
                     octaveTotal +
                         " " +
@@ -767,7 +793,7 @@ saveLilypondOutput = function(logo) {
                 logo.notationOutput += "\n}\n\n";
             } else {
                 if (t in logo.turtles.turtleList) {
-                    const turtleNumber = tNumber;
+                    // const turtleNumber = tNumber;
 
                     instrumentName = logo.turtles.turtleList[t].name;
                     if (
@@ -788,7 +814,7 @@ saveLilypondOutput = function(logo) {
                     .replace(/ /g, "")
                     .replace(".", "");
 
-                console.log("L604: " + instrumentName);
+                // console.log("L604: " + instrumentName);
                 logo.notationOutput += instrumentName + " = {\n";
                 logo.notationOutput += logo.notationNotes[t];
 
@@ -850,7 +876,7 @@ saveLilypondOutput = function(logo) {
                         done = 1;
                     } else if (done !== 1) {
                         final = "";
-                        for (let q = 1; i < instrumentName.length; i++) {
+                        for (let q = 1; q < instrumentName.length; q++) {
                             part2 = part2 + secondPart.charAt(q);
                             final = part1 + part2;
                             if (occupiedShortNames.indexOf(final) === -1) {
@@ -872,8 +898,8 @@ saveLilypondOutput = function(logo) {
                     }
                 }
 
-                console.debug("instrumentName: " + instrumentName);
-                console.debug("shortInstrumentName: " + shortInstrumentName);
+                // console.debug("instrumentName: " + instrumentName);
+                // console.debug("shortInstrumentName: " + shortInstrumentName);
             }
 
             logo.notationOutput +=
@@ -888,7 +914,7 @@ saveLilypondOutput = function(logo) {
                 '   instrumentName = "' + instrumentName + '"\n';
             if (tNumber > startDrums - 1) {
                 const num = tNumber - startDrums;
-                console.debug("shortInstrumentName = d" + num);
+                // console.debug("shortInstrumentName = d" + num);
                 logo.notationOutput +=
                     '   shortInstrumentName = "' + "d" + num + '"\n';
                 logo.notationOutput += '   midiInstrument = "snare drum"\n';
@@ -919,7 +945,7 @@ saveLilypondOutput = function(logo) {
 
     // Sort the staffs, treble on top, bass_8 on the bottom.
     for (let c = 0; c < CLEFS.length; c++) {
-        const i = 0;
+        // const i = 0;
         let instrumentName;
         for (const t in logo.notationNotes) {
             let tNumber = t;
@@ -930,7 +956,7 @@ saveLilypondOutput = function(logo) {
             if (clef[tNumber] === CLEFS[c]) {
                 if (logo.notation.notationStaging[t].length > 0) {
                     if (tNumber > startDrums - 1) {
-                        const instrumentName =
+                        instrumentName =
                             _("drum") + NUMBERNAMES[tNumber - startDrums];
                     } else {
                         if (t in logo.turtles.turtleList) {
@@ -943,7 +969,7 @@ saveLilypondOutput = function(logo) {
                             instrumentName = _("mouse");
                         }
 
-                        console.debug("Source: " + instrumentName);
+                        // console.debug("Source: " + instrumentName);
 
                         if (instrumentName === "") {
                             instrumentName = _("mouse");
