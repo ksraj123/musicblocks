@@ -200,18 +200,18 @@ processLilypondNotes = function(lilypond, logo, turtle) {
                         // (3 . ,NATURAL) (4 . ,NATURAL) (5 . ,FLAT) (6 . ,FLAT))
                         let modeDef = "\n" + mode.replace(/ /g, "_") + " = #`(";
                         let prevNote = "";
-                        let nn = -1;
+                        let n, nn = -1;
                         for (let ii = 0; ii < obj[1].length; ii++) {
                             if (obj[1][ii] !== "") {
                             // Are we repeating notes, e.g., Db and D?
-                                if (obj[0][ii].substr(0, 1) === prevNote) {
+                                if (obj[0][ii].substr(0, obj[0][ii].length) === prevNote) {
                                     modeDef = "";
                                     break;
                                 } else {
-                                    prevNote = obj[0][ii].substr(0, 1);
+                                    prevNote = obj[0][ii].substr(0, obj[0][ii].length);
                                 }
 
-                                const n = [
+                                n = [
                                     "C",
                                     "D",
                                     "E",
