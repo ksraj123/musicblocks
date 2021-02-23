@@ -23,8 +23,9 @@ class WidgetWindow {
     /**
      * @param {string} key
      * @param {string} title
+     * @param {boolean} fullscreen
      */
-    constructor(key, title) {
+    constructor(key, title, fullscreen) {
         // Keep a refernce to the object within handlers
         this._key = key;
         this._buttons = [];
@@ -34,6 +35,7 @@ class WidgetWindow {
         this._rolled = false;
         this._savedPos = null;
         this._maximized = false;
+        this._fullscreenEnabled = fullscreen;
 
         // Drag offset for correct positioning
         this._dx = this._dy = 0;
@@ -133,22 +135,25 @@ class WidgetWindow {
         titleEl.innerHTML = _(this._title);
         titleEl.id = this._key + "WidgetID";
 
-        const maxminButton = this._create("div", "wftButton wftMaxmin", this._drag);
-        maxminButton.onclick = maxminButton.onmousedown = (e) => {
-            if (this._maximized) {
-                this._restore();
-                this.sendToCenter();
-            } else {
-                this._maximize();
-            }
-            this.takeFocus();
-            this.onmaximize();
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        };
+        if (this._fullscreenEnabled) {
+            const maxminButton = this._create("div", "wftButton wftMaxmin", this._drag);
+            maxminButton.onclick = maxminButton.onmousedown = (e) => {
+                if (this._maximized) {
+                    this._restore();
+                    this.sendToCenter();
+                } else {
+                    this._maximize();
+                }
+                this.takeFocus();
+                this.onmaximize();
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            };
 
-        this._maxminIcon = this._create("img", undefined, maxminButton);
-        this._maxminIcon.setAttribute("src", "header-icons/icon-expand.svg");
+            this._maxminIcon = this._create("img", undefined, maxminButton);
+            this._maxminIcon.setAttribute("src", "header-icons/icon-expand.svg");
+        }
+
 
         this._body = this._create("div", "wfWinBody", this._frame);
         this._toolbar = this._create("div", "wfbToolbar", this._body);
@@ -205,7 +210,7 @@ class WidgetWindow {
      */
     _dragTopHandler(e) {
         this._dragging = false;
-        if (this._frame.style.top === "64px") {
+        if (this._fullscreenEnabled && this._frame.style.top === "64px") {
             this._maximize();
             this.takeFocus();
             this.onmaximize();
@@ -561,9 +566,10 @@ class WidgetWindow {
  * @param {Object} widget
  * @param {string} title
  * @param {string} saveAs
+ * @param {boolean} fullscreen
  * @returns {WidgetWindow} this
  */
-window.widgetWindows.windowFor = (widget, title, saveAs) => {
+window.widgetWindows.windowFor = (widget, title, saveAs, fullscreen = true) => {
     let key = undefined;
     // Check for a blockNo attribute
     if (typeof widget.blockNo !== "undefined") key = widget.blockNo;
@@ -571,7 +577,7 @@ window.widgetWindows.windowFor = (widget, title, saveAs) => {
     else key = saveAs || title;
 
     if (typeof window.widgetWindows.openWindows[key] === "undefined") {
-        const win = new WidgetWindow(key, title).sendToCenter();
+        const win = new WidgetWindow(key, title, fullscreen).sendToCenter();
         window.widgetWindows.openWindows[key] = win;
     }
 
